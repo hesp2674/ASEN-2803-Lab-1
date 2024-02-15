@@ -4,21 +4,24 @@ close all;
 
 %% LOOP 
 
-%Variables
-h0 = 45.8716;
-%h0 = 60;
+%Initial Values
+h0 = 125;
+base = 85;
 g = 9.81;
-v0 = sqrt(2*g*h0);
 theta0 = 70;
+x0 = 5; %Initial x position
+y_plane = 0;
 
-
+%Calculatev Values
+v0 = sqrt(2*g*(h0-base));
+xf = x0 + (v0^2*sind(2*theta0))/g; %Uses rng eq to find where it's level
 
 % Parabola diagram
-x = linspace(0, 60, 1000);  %correct
-z = x.*tand(theta0) - ((9.81.*(x.^2))/(2*v0^2*(cosd(theta0))^2));  %Correct
+x = linspace(x0, xf, 1000); %Interval
+z = ((x-x0).*tand(theta0) - ((g.*((x-x0).^2))/(2*v0^2*(cosd(theta0))^2)))+base; %Solves for z
 
-dzdx = tand(theta0) - (9.81.*x)/(v0^2*(cosd(theta0)^2));
-d2zdx2 = -9.81/(v0^2*cosd(theta0)^2);
+dzdx = tand(theta0) - (g.*(x-x0))/(v0^2*(cosd(theta0)^2));
+d2zdx2 = -g/(v0^2*cosd(theta0)^2);
 
 rho = ((1+(dzdx.^2)).^(3/2))./abs(d2zdx2);
 theta = atand(dzdx);
@@ -35,7 +38,7 @@ grid on;
 hold on;
 
 %G-plot
-y=zeros(1,1000);
+y=zeros(1,1000) + y_plane;
 figure();
 scatter3(x,y,z,[],G_force)
 colormap;
