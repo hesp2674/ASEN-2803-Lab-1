@@ -2,19 +2,20 @@ clc;
 clear ;
 close all;
 
-%% LOOP 
+%% PARABOLA
 
 %Initial Values
 h0 = 125;
-base = 85;
+base = 70;
 g = 9.81;
-theta0 = 70;
+theta0 = 65;
 x0 = 5; %Initial x position
 y_plane = 0;
 
 %Calculatev Values
 v0 = sqrt(2*g*(h0-base));
 xf = x0 + (v0^2*sind(2*theta0))/g; %Uses rng eq to find where it's level
+y=zeros(1,1000) + y_plane; %Calculates the y values
 
 % Parabola diagram
 x = linspace(x0, xf, 1000); %Interval
@@ -28,18 +29,57 @@ theta = atand(dzdx);
 v = sqrt(2*g.*(h0-z));
 G_force = cosd(theta)-((v.^2)./(g.*rho));
 
+parabola_length = 129.29068;
+position_vec = linspace(0,parabola_length,1000);
 
+%% Plots
 %Plot
-plot(x,z)
-xlabel('X position (m)');
-ylabel('Z position (m)');
+% plot(x,z)
+% xlabel('X position (m)');
+% ylabel('Z position (m)');
+% grid on;
+
+subplot(3,1,1)
+plot(position_vec, G_force)
 grid on;
+ylim([-1 6])
+xlabel('Position (m)');
+ylabel('G-Force Up/Dowm (Gs)');
 
-hold on;
+subplot(3,1,2)
+lat_gs = zeros(length(position_vec));
+plot(position_vec, lat_gs)
+grid on;
+ylim([-3 3])
+xlabel('Position (m)');
+ylabel('G-Force Lateral (Gs)');
 
-%G-plot
-y=zeros(1,1000) + y_plane;
+subplot(3,1,3)
+lat_gs = zeros(length(position_vec),1);
+plot(position_vec, lat_gs)
+grid on;
+ylim([-4 5])
+xlabel('Position (m)');
+ylabel('G-Force Forward/Back (Gs)');
+
+
+%G-Force Plot
 figure();
 scatter3(x,y,z,[],G_force)
 colormap;
-colorbar;
+cb = colorbar();
+ylabel(cb,'G-Force')
+ylabel('Y Positon')
+xlabel('X Position')
+zlabel('Z Position')
+
+%Velocity Plot
+figure();
+scatter3(x,y,z,[],v)
+colormap;
+cb = colorbar();
+ylabel(cb,'Velocity')
+ylabel('Y Positon')
+xlabel('X Position')
+zlabel('Z Position')
+
