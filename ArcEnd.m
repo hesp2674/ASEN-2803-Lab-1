@@ -17,7 +17,7 @@ function [x_vals, y, z_vals, position, v, G_force] = ArcEnd(x_end, z_end, theta_
     
     theta = angle-90;
     v = sqrt(2*g.*(h0-z_vals));
-    G_force = ((v.^2)./(g.*radius))-sind(theta);
+    G_force = ((v.^2)./(g.*radius))-cosd(theta);
     
     len_curve = sum(vecnorm(diff( [x_vals(:),z_vals(:)] ),2,2));
     position = linspace(0, len_curve, N);

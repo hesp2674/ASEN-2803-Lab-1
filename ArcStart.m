@@ -8,7 +8,7 @@ function [x_vals, y, z_vals, position, v, G_force] = ArcStart(x_start, z_start, 
     
     circd = @(radius,deg_ang)  [radius*cosd(deg_ang);  radius*sind(deg_ang)];       % Circle Function For Angles In Degrees
     
-    N = 250;
+    N = 500;
     thetaf = -90;
     theta_start_corr = theta_start - 90;% Number Of Points In Complete Circle
     angle = linspace(theta_start_corr, thetaf, N);                                   % Angle Defining Arc Segment (deg)
@@ -19,7 +19,7 @@ function [x_vals, y, z_vals, position, v, G_force] = ArcStart(x_start, z_start, 
     
     theta = angle-90;
     v = sqrt(2*g.*(h0-z_vals));
-    G_force = ((v.^2)./(g.*radius))-sind(theta);
+    G_force = ((v.^2)./(g.*radius))-cosd(theta);
     
 
     len_curve = sum(vecnorm(diff( [x_vals(:),z_vals(:)] ),2,2));
