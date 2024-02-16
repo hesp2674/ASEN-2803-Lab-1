@@ -12,7 +12,7 @@ N = 1000;
 theta = linspace (0,360,N);
 R = 30;
 g = 9.81;
-x0 = -150;
+x0 = -100;
 y0 = 0;
 z0 = 60;
 
@@ -34,13 +34,17 @@ position_vec_loop = linspace(0, len_curve, N);
 
 
 %% ARC 0
-[x_arc_0, y_arc_0, z_arc_0, position_arc_0, v_arc_0, G_force_arc_0] = ArcEnd(-150+13.681, 60-2.4123, -20, 0, -40);
-%62.4123
-%163.681
+[x_arc_0, y_arc_0, z_arc_0, position_arc_0, v_arc_0, G_force_arc_0] = ArcEnd(-100+13.681, 60-2.4123, -20, 0, -40);
 
+%% Line 0
+[x_line_0, y_line_0, z_line_0, position_line_0, v_line_0, G_force_line_0] = Line(-86.319, 57.5877, -79.465, 55.0928, 0);
 
 %% Arc 1
-[x_arc_1, y_arc_1, z_arc_1, position_arc_1, v_arc_1, G_force_arc_1] = ArcStart(-136.319, 52.6805, -20, 0, 40);
+[x_arc_1, y_arc_1, z_arc_1, position_arc_1, v_arc_1, G_force_arc_1] = ArcStart(-65.7842, 52.6805, -20, 0, 40);
+
+%% Line 1
+[x_line_1, y_line_1, z_line_1, position_line_1, v_line_1, G_force_line_1] = Line(-65.7842, 52.6805, -22.1892, 52.6785, 0);
+
 
 %% ARC 2
 [x_arc_2, y_arc_2, z_arc_2, position_arc_2, v_arc_2, G_force_arc_2] = ArcEnd(5, 70, 65, 0, 30);
@@ -76,12 +80,12 @@ parabola_length = sum(vecnorm(diff( [x_parabola(:),z_parabola(:)] ),2,2));
 position_vec_parabola = linspace(0,parabola_length,1000);
 
 % Concatonating data
-x = [x_loop, x_arc_0, x_arc_1, x_arc_2, x_parabola];
-z = [z_loop, z_arc_0, z_arc_1, z_arc_2, z_parabola];
-y = [y_loop, y_arc_0, y_arc_1, y_arc_2, y_parabola];
+x = [x_loop, x_arc_0, x_line_0, x_arc_1, x_line_1, x_arc_2, x_parabola];
+z = [z_loop, z_arc_0, z_line_0, z_arc_1, z_line_1, z_arc_2, z_parabola];
+y = [y_loop, y_arc_0, y_line_0, y_arc_1, y_line_1, y_arc_2, y_parabola];
 
-v = [v_loop, v_arc_0, v_arc_1, v_arc_2, v_parabola];
-G_force = [G_force_loop, G_force_arc_0, G_force_arc_1, G_force_arc_2, G_force_parabola];
+v = [v_loop, v_arc_0, v_line_0, v_arc_1, v_line_1, v_arc_2, v_parabola];
+G_force = [G_force_loop, G_force_arc_0, G_force_line_0, G_force_arc_1, G_force_line_1, G_force_arc_2, G_force_parabola];
 
 
 %% Arc 3
