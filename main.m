@@ -5,11 +5,11 @@ h0 = 125;
 g = 9.81;
 
 %% Line 0
-[x_line_0, y_line_0, z_line_0, position_line_0, v_line_0, G_force_line_0] = Line(-214.7058, 125, -184.853, 95.14732, 0);
+[x_line_0, y_line_0, z_line_0, p_line_0, v_line_0, G_force_line_0] = Line(-214.7058, 125, -184.853, 95.14732, 0);
 
 
 %% ARC 1
-[x_arc_1, y_arc_1, z_arc_1, position_arc_1, v_arc_1, G_force_arc_1] = ArcStart(-100, 60, -45, 0, 120);
+[x_arc_1, y_arc_1, z_arc_1, p_arc_1, v_arc_1, G_force_arc_1] = ArcStart(-100, 60, -45, 0, 120);
 
 
 %% LOOP 
@@ -37,24 +37,24 @@ G_bot_loop = (2*h0/R) +1;
 G_force_loop = ((v_loop.^2)./(g.*R))-sind(theta);
 
 len_curve = sum(vecnorm(diff( [x_loop(:),z_loop(:)] ),2,2));
-position_vec_loop = linspace(0, len_curve, N);
+p_vec_loop = linspace(0, len_curve, N);
 
 
 %% ARC 2
-[x_arc_2, y_arc_2, z_arc_2, position_arc_2, v_arc_2, G_force_arc_2] = ArcEnd(-81.883, 57.6148, -15, 0, -70);
+[x_arc_2, y_arc_2, z_arc_2, p_arc_2, v_arc_2, G_force_arc_2] = ArcEnd(-81.883, 57.6148, -15, 0, -70);
 
 %% Line 1
-[x_line_1, y_line_1, z_line_1, position_line_1, v_line_1, G_force_line_1] = Line(-81.883, 57.6148, -68.3957, 54.0435, 0);
+[x_line_1, y_line_1, z_line_1, p_line_1, v_line_1, G_force_line_1] = Line(-81.883, 57.6148, -68.3957, 54.0435, 0);
 
 %% Arc 3
-[x_arc_3, y_arc_3, z_arc_3, position_arc_3, v_arc_3, G_force_arc_3] = ArcStart(-58.0429, 52.6805, -15, 0, 40);
+[x_arc_3, y_arc_3, z_arc_3, p_arc_3, v_arc_3, G_force_arc_3] = ArcStart(-58.0429, 52.6805, -15, 0, 40);
 
 %% Line 2
-[x_line_2, y_line_2, z_line_2, position_line_2, v_line_2, G_force_line_2] = Line(-58.0429, 52.6805, -22.1892, 52.6785, 0);
+[x_line_2, y_line_2, z_line_2, p_line_2, v_line_2, G_force_line_2] = Line(-58.0429, 52.6805, -22.1892, 52.6785, 0);
 
 
 %% ARC 4
-[x_arc_4, y_arc_4, z_arc_4, position_arc_4, v_arc_4, G_force_arc_4] = ArcEnd(5, 70, 65, 0, 30);
+[x_arc_4, y_arc_4, z_arc_4, p_arc_4, v_arc_4, G_force_arc_4] = ArcEnd(5, 70, 65, 0, 30);
 
 
 %% PARABOLA
@@ -84,48 +84,131 @@ G_force_parabola = cosd(theta)-((v_parabola.^2)./(g.*rho));
 
 
 parabola_length = sum(vecnorm(diff( [x_parabola(:),z_parabola(:)] ),2,2));
-position_vec_parabola = linspace(0,parabola_length,1000);
+p_parabola = linspace(0,parabola_length,1000);
 
 % Concatonating data
 x = [x_line_0, x_arc_1, x_loop, x_arc_2, x_line_1, x_arc_3, x_line_2, x_arc_4, x_parabola];
 z = [z_line_0, z_arc_1, z_loop, z_arc_2, z_line_1, z_arc_3, z_line_2, z_arc_4, z_parabola];
 y = [y_line_0, y_arc_1, y_loop, y_arc_2, y_line_1, y_arc_3, y_line_2, y_arc_4, y_parabola];
 
-v = [v_line_0, v_arc_1, v_loop, v_arc_2, v_line_1, v_arc_3, v_line_2, v_arc_4, v_parabola];
 G_force = [G_force_line_0, G_force_arc_1, G_force_loop, G_force_arc_2, G_force_line_1, G_force_arc_3, G_force_line_2, G_force_arc_4, G_force_parabola];
+G_l = zeros(1, length(G_force));
+G_tan = zeros(1, length(G_force));
+
+v = [v_line_0, v_arc_1, v_loop, v_arc_2, v_line_1, v_arc_3, v_line_2, v_arc_4, v_parabola];
+p_vec = p_line_0;
+p_vec = [p_vec, p_arc_1 + p_vec(length(p_vec))];
+p_vec = [p_vec, p_vec_loop + p_vec(length(p_vec))];
+p_vec = [p_vec, p_arc_2 + p_vec(length(p_vec))];
+p_vec = [p_vec, p_line_1 + p_vec(length(p_vec))];
+p_vec = [p_vec, p_arc_3 + p_vec(length(p_vec))];
+p_vec = [p_vec, p_line_2 + p_vec(length(p_vec))];
+p_vec = [p_vec, p_arc_4 + p_vec(length(p_vec))];
+p_vec = [p_vec, p_parabola + p_vec(length(p_vec))];
+
+
+%% Line 3
+[x_line_3, y_line_3, z_line_3, p_line_3, v_line_3, G_force_line_3] = Line(x(length(x)), z(length(z)), 102.6376, 41.4325, 0);
+
+x = [x, x_line_3];
+z = [z, z_line_3];
+y = [y, y_line_3];
+
+
+G_force = [G_force, G_force_line_3];
+G_l = [G_l, zeros(1, length(G_force_line_3))];
+G_tan = [G_tan, zeros(1, length(G_force_line_3))];
+
+v = [v, v_line_3];
+p_vec = [p_vec, p_line_3 + p_vec(length(p_vec))];
 
 
 %% Arc 5
-
-[x_arc_5, y_arc_5, z_arc_5, position_arc_5, v_arc_5, G_force_arc_5] = ArcEnd(x(length(x)), z(length(z)), -65, 0, 30);
+[x_arc_5, y_arc_5, z_arc_5, p_arc_5, v_arc_5, G_force_arc_5] = ArcEnd(x(length(x)), z(length(z)), -65, 0, 50);
 
 %c Concatonating data
-x = [x, x_arc_5];
-z = [z, z_arc_5];
-y = [y, y_arc_5];
+x = [x, flip(x_arc_5, 2)];
+z = [z, flip(z_arc_5, 2)];
+y = [y, flip(y_arc_5, 2)];
 
-v = [v, v_arc_5];
-G_force = [G_force, G_force_arc_5];
 
+G_force = [G_force, flip(G_force_arc_5, 2)];
+G_l = [G_l, zeros(1, length(G_force_arc_5))];
+G_tan = [G_tan, zeros(1, length(G_force_arc_5))];
+
+v = [v, flip(v_arc_5, 2)];
+p_vec = [p_vec, flip(p_arc_5, 2) + p_vec(length(p_vec))];
+
+
+%% Banked Turn
+[x_bank, y_bank, z_bank, p_bank, v_bank, G_bank_n, G_bank_l] = BankedTurnFunction(x(length(x)));
+
+x = [x, x_bank];
+z = [z, z_bank];
+y = [y, y_bank];
+
+
+G_force = [G_force, G_bank_n];
+G_l = [G_l, G_bank_l];
+G_tan = [G_tan, zeros(1, length(G_bank_n))];
+
+v = [v, v_bank];
+p_vec = [p_vec, p_bank + p_vec(length(p_vec))];
+
+%% Braking Section
+N_brake = 1000;
+brake_g = 2.5;
+brake_len = h0/brake_g;
+
+x_brake = linspace(x(length(x)), brake_len+x(length(x)), N_brake);
+y_brake = zeros(1, N_brake);
+z_brake = zeros(1, N_brake);
+
+v_brake = sqrt(2*g*h0 - 2*brake_g*g.*(x_brake-x(length(x))));
+
+G_force_brake = ones(1, N_brake);
+G_force_brake_tan = brake_g*ones(1, N_brake);
+
+x = [x, x_brake];
+z = [z, z_brake];
+y = [y, y_brake];
+
+G_force = [G_force, G_force_brake];
+G_l = [G_l, zeros(1, N)];
+G_tan = [G_tan, G_force_brake_tan];
+
+v = [v, v_brake];
+p_vec = [p_vec, x_brake + p_vec(length(p_vec))];
 
 %% Plotting
 
 %G-Force Plot
+% figure();
+% scatter3(x,y,z,[],G_force)
+% colormap('summer');
+% cb = colorbar();
+% ylabel(cb,'G-Force')
+% ylabel('Y Positon')
+% xlabel('X Position')
+% zlabel('Z Position')
+
+%Velocity Plot
 figure();
-scatter3(x,y,z,[],G_force)
-colormap;
+scatter3(x,y,z,[],v)
+colormap('jet');
 cb = colorbar();
-ylabel(cb,'G-Force')
+ylabel(cb,'Velocity')
 ylabel('Y Positon')
 xlabel('X Position')
 zlabel('Z Position')
 
-%Velocity Plot
-% figure();
-% scatter3(x,y,z,[],v)
-% colormap;
-% cb = colorbar();
-% ylabel(cb,'Velocity')
-% ylabel('Y Positon')
-% xlabel('X Position')
-% zlabel('Z Position')
+
+figure();
+subplot(3,1,1)
+plot(p_vec, G_force)
+
+subplot(3,1,2)
+plot(p_vec, z)
+
+subplot(3,1,3)
+plot(x, z)
