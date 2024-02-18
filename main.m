@@ -16,7 +16,7 @@ g = 9.81;
 
 %Variables for loop
 N = 1000;
-theta = linspace (0,360,N);
+theta = linspace (-90,270,N);
 R = 30;
 g = 9.81;
 x0 = -100;
@@ -26,7 +26,15 @@ z0 = 60;
 
 %Eq of Circle
 x_loop = (R*cosd(theta)) + x0;
+
+%x_temp = x_loop(1, 3*length(x_loop)/4+1:length(x_loop));
+%x_loop = [x_temp, x_loop(1, 1:3*length(x_loop)/4)];
+
 z_loop = (R*sind(theta) + R) + z0;
+
+%z_temp = z_loop(1, 3*length(z_loop)/4+1:length(z_loop));
+%z_loop = [z_temp, z_loop(1, 1:3*length(z_loop)/4)];
+
 y_loop = zeros(1,length(x_loop)) + y0;
 
 % G Force at different locations
@@ -137,23 +145,24 @@ G_l = [G_l, zeros(1, length(G_force_arc_5))];
 G_tan = [G_tan, zeros(1, length(G_force_arc_5))];
 
 v = [v, flip(v_arc_5, 2)];
-p_vec = [p_vec, flip(p_arc_5, 2) + p_vec(length(p_vec))];
+p_vec = [p_vec, p_arc_5 + p_vec(length(p_vec))];
 
 
 %% Banked Turn
 [x_bank, y_bank, z_bank, p_bank, v_bank, G_bank_n, G_bank_l] = BankedTurnFunction(x(length(x)));
 
-x = [x, x_bank];
-z = [z, z_bank];
-y = [y, y_bank];
+x = [x, flip(x_bank, 2)];
+z = [z, flip(z_bank, 2)];
+y = [y, flip(y_bank, 2)];
 
 
-G_force = [G_force, G_bank_n];
-G_l = [G_l, G_bank_l];
+G_force = [G_force, flip(G_bank_n, 2)];
+G_l = [G_l, flip(G_bank_l, 2)];
 G_tan = [G_tan, zeros(1, length(G_bank_n))];
 
-v = [v, v_bank];
+v = [v, flip(v_bank, 2)];
 p_vec = [p_vec, p_bank + p_vec(length(p_vec))];
+
 
 %% Braking Section
 N_brake = 1000;
@@ -169,6 +178,9 @@ v_brake = sqrt(2*g*h0 - 2*brake_g*g.*(x_brake-x(length(x))));
 G_force_brake = ones(1, N_brake);
 G_force_brake_tan = brake_g*ones(1, N_brake);
 
+len_curve = sum(vecnorm(diff( [x_brake(:),z_brake(:)] ),2,2));
+p_brake = linspace(0, len_curve, N_brake);
+
 x = [x, x_brake];
 z = [z, z_brake];
 y = [y, y_brake];
@@ -177,24 +189,26 @@ G_force = [G_force, G_force_brake];
 G_l = [G_l, zeros(1, N)];
 G_tan = [G_tan, G_force_brake_tan];
 
+
+
 v = [v, v_brake];
-p_vec = [p_vec, x_brake + p_vec(length(p_vec))];
+p_vec = [p_vec, p_brake + p_vec(length(p_vec))];
 
 %% Plotting
 
 %G-Force Plot
-% figure();
-% scatter3(x,y,z,[],G_force)
-% colormap('summer');
-% cb = colorbar();
-% ylabel(cb,'G-Force')
-% ylabel('Y Positon')
-% xlabel('X Position')
-% zlabel('Z Position')
+figure();
+scatter3(x,y,z,5,G_force)
+colormap('hsv');
+cb = colorbar();
+ylabel(cb,'G-Force')
+ylabel('Y Positon')
+xlabel('X Position')
+zlabel('Z Position')
 
 %Velocity Plot
 figure();
-scatter3(x,y,z,[],v)
+scatter3(x,y,z,5,v)
 colormap('jet');
 cb = colorbar();
 ylabel(cb,'Velocity')
@@ -206,9 +220,28 @@ zlabel('Z Position')
 figure();
 subplot(3,1,1)
 plot(p_vec, G_force)
+xlabel('Position')
+ylabel('Normal G Force')
 
 subplot(3,1,2)
-plot(p_vec, z)
+plot(p_vec, G_l)
+xlabel('Position')
+ylabel('Lateral G Force')
 
 subplot(3,1,3)
-plot(x, z)
+plot(p_vec, G_tan)
+xlabel('Position')
+ylabel('Tangential G Force')
+
+
+
+
+% subplot(3,1,2)
+% plot(p_vec, G_l)
+% xlabel('Position')
+% ylabel('Z')
+% 
+% subplot(3,1,3)
+% plot(x, z)
+% xlabel('X')
+% ylabel('Z')
