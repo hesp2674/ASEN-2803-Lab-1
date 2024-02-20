@@ -6,7 +6,7 @@ close all;
 
 %Variables
 h0 = 125;
-N = 750;
+N = 1000;
 theta = linspace (-90,270,N);
 R = 30;
 g = 9.81;
@@ -37,7 +37,7 @@ plot(position_vec, G_force)
 grid on;
 ylim([-1 6])
 xlabel('Position (m)');
-ylabel('G-Force Up/Dowm (Gs)');
+ylabel('G-Force Normal (Gs)');
 
 subplot(3,1,2)
 lat_gs = zeros(length(position_vec));
@@ -53,7 +53,7 @@ plot(position_vec, lat_gs)
 grid on;
 ylim([-4 5])
 xlabel('Position (m)');
-ylabel('G-Force Forward/Back (Gs)');
+ylabel('G-Force Tangential (Gs)');
 
 %G-Force Plot
 figure();
