@@ -3,8 +3,7 @@ function [x_vals, y, z_vals, position, v, G_force] = ArcStart(x_start, z_start, 
     %Constants
     g = 9.81;
     h0 = 125;
-     
-    
+
     
     circd = @(radius,deg_ang)  [radius*cosd(deg_ang);  radius*sind(deg_ang)];       % Circle Function For Angles In Degrees
     

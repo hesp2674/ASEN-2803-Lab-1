@@ -7,7 +7,7 @@ close all;
 %Variables
 h0 = 125;
 N = 750;
-theta = linspace (0,360,N);
+theta = linspace (-90,270,N);
 R = 30;
 g = 9.81;
 x0 = 0;

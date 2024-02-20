@@ -29,7 +29,8 @@ theta = atand(dzdx);
 v = sqrt(2*g.*(h0-z));
 G_force = cosd(theta)-((v.^2)./(g.*rho));
 
-parabola_length = 129.29068;
+
+parabola_length = sum(vecnorm(diff( [x(:),z(:)] ),2,2));
 position_vec = linspace(0,parabola_length,1000);
 
 %% Plots
@@ -44,7 +45,7 @@ plot(position_vec, G_force)
 grid on;
 ylim([-1 6])
 xlabel('Position (m)');
-ylabel('G-Force Up/Dowm (Gs)');
+ylabel('G-Force Normal (Gs)');
 
 subplot(3,1,2)
 lat_gs = zeros(length(position_vec));
@@ -60,7 +61,7 @@ plot(position_vec, lat_gs)
 grid on;
 ylim([-4 5])
 xlabel('Position (m)');
-ylabel('G-Force Forward/Back (Gs)');
+ylabel('G-Force Tangential (Gs)');
 
 
 %G-Force Plot

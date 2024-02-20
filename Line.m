@@ -13,7 +13,7 @@ function [x, y, z, position, v, G_force] = Line(x0, z0, xf, zf, y)
     
     theta = atand((zf-z0)/(xf-x0));
     
-    G_force = zeros(1,N) + (g*sind(theta));
+    G_force = zeros(1,N) + (cosd(theta));
     
     v = sqrt(2*g*(h0-z));
 

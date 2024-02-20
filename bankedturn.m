@@ -1,7 +1,7 @@
 clear; clc; close all;
 
 t = [0:(pi/500):2*pi];
-x = 50*sin(t);
+x = -50*sin(t);
 y = 50*cos(t);
 z = 2*t;
 t2 = t';
